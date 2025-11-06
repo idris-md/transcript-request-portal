@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,7 +30,6 @@ const newRequestSchema = z.object({
 });
 
 type NewRequestFormValues = z.infer<typeof newRequestSchema>;
-
 type Scope = "WITHIN_NG" | "OUTSIDE_NG";
 
 export default function NewRequestPage() {
@@ -55,6 +55,7 @@ export default function NewRequestPage() {
   });
 
   const currentScope = watch("scope") as Scope;
+  const hasStarted = requestId !== null && amountNGN !== null;
 
   // ---------- Step 1: Start request ----------
   async function onSubmit(values: NewRequestFormValues) {
@@ -95,7 +96,6 @@ export default function NewRequestPage() {
     setServerError(null);
     setServerMessage(null);
 
-    // We re-use the email from the form for Paystack
     const requestEmail = watch("requestEmail");
 
     try {
@@ -118,38 +118,56 @@ export default function NewRequestPage() {
       }
 
       const json = await res.json();
-      // redirect to Paystack authorization URL
       window.location.href = json.authUrl;
     } catch (e) {
       setServerError("Network error while initializing payment. Please try again.");
     }
   }
 
-  const hasStarted = requestId !== null && amountNGN !== null;
-
-  // ---------- UI ----------
   return (
-    <div className="max-w-xl">
-      <div className="mb-6 space-y-1">
+    <div className="mx-auto max-w-2xl space-y-6 px-4 py-6">
+      {/* Top bar / breadcrumb */}
+      <div className="flex items-center justify-between gap-2">
+        <Button
+          asChild
+          size="sm"
+          variant="light"
+        >
+          <Link href="/dashboard">← Back to dashboard</Link>
+        </Button>
+        <Chip size="sm" variant="flat">
+          Step 1 of 3 · Request → Payment → Destination
+        </Chip>
+      </div>
+
+      {/* Page header */}
+      <div className="space-y-1 border-b border-default-200 pb-4">
         <h1 className="text-2xl font-semibold">New Transcript Request</h1>
         <p className="text-sm opacity-75">
-          Choose where your transcript will be sent and provide an email we can use
-          to send updates about this request.
+          Start a new transcript request by choosing where it will be sent and the
+          email address we should use for notifications.
         </p>
       </div>
 
       <Card className="border border-default-200/60 shadow-sm">
-        <CardHeader className="flex flex-col gap-1">
-          <p className="text-base font-medium">Request details</p>
-          <p className="text-xs opacity-70">
-            You can request transcripts for delivery within Nigeria or to institutions
-            outside the country. Fees differ by destination.
-          </p>
+        <CardHeader className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-base font-medium">Request details</p>
+            <p className="text-xs opacity-70">
+              Choose whether this transcript is going to an institution within
+              Nigeria or outside the country. Fees are based on the destination.
+            </p>
+          </div>
+          <Chip size="sm" variant="flat">
+            {currentScope === "WITHIN_NG"
+              ? "Within Nigeria"
+              : "Outside Nigeria"}
+          </Chip>
         </CardHeader>
 
         <Divider />
 
-        <CardBody>
+        <CardBody className="space-y-5">
           <form
             className="space-y-5"
             onSubmit={handleSubmit(onSubmit)}
@@ -168,9 +186,12 @@ export default function NewRequestPage() {
                     orientation="horizontal"
                     value={field.value}
                     onValueChange={(v) => field.onChange(v as Scope)}
-                    isDisabled={hasStarted} // lock after we start request
+                    isDisabled={hasStarted}
                   >
-                    <Radio value="WITHIN_NG" description="Delivery to institutions in Nigeria">
+                    <Radio
+                      value="WITHIN_NG"
+                      description="Delivery to institutions in Nigeria"
+                    >
                       Within Nigeria
                     </Radio>
                     <Radio
@@ -183,8 +204,13 @@ export default function NewRequestPage() {
                 )}
               />
               {errors.scope && (
-                <p className="text-xs text-danger mt-1">
+                <p className="mt-1 text-xs text-danger">
                   {errors.scope.message}
+                </p>
+              )}
+              {!hasStarted && (
+                <p className="text-[11px] opacity-70">
+                  You won&apos;t be able to change this after you start the request.
                 </p>
               )}
             </section>
@@ -201,38 +227,45 @@ export default function NewRequestPage() {
                 {...register("requestEmail")}
                 isInvalid={!!errors.requestEmail}
                 errorMessage={errors.requestEmail?.message}
-                isDisabled={hasStarted} // lock after we start
+                isDisabled={hasStarted}
               />
               <p className="text-[11px] opacity-70">
-                We’ll send receipts and status notifications for this transcript
-                request to this email.
+                Receipts and status notifications for this transcript request will
+                be sent to this email address.
               </p>
             </section>
 
-            {/* Start button (only if not started) */}
+            {/* Start button */}
             {!hasStarted && (
-              <Button
-                color="primary"
-                type="submit"
-                className="w-full sm:w-auto"
-                isLoading={isSubmitting}
-              >
-                Start request & show fee
-              </Button>
+              <div className="pt-1">
+                <Button
+                  color="primary"
+                  type="submit"
+                  className="w-full sm:w-auto"
+                  isLoading={isSubmitting}
+                >
+                  Start request &amp; show fee
+                </Button>
+                <p className="mt-2 text-[11px] opacity-70">
+                  Once you start, we&apos;ll create a new transcript request and
+                  calculate the applicable fee based on your selection.
+                </p>
+              </div>
             )}
           </form>
 
-          {/* After start: show summary & payment */}
+          {/* After start: payment summary */}
           {hasStarted && (
-            <section className="mt-6 space-y-3">
-              <Divider />
-              <p className="text-xs font-semibold uppercase tracking-wide opacity-70">
+            <section className="mt-2 space-y-3 rounded-lg border border-default-200 bg-default-50 px-3 py-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wide opacity-70">
                 Payment summary
               </p>
               <div className="flex flex-wrap items-center gap-3">
                 <Chip variant="flat" size="sm">
                   Scope:{" "}
-                  {lockedScope === "WITHIN_NG" ? "Within Nigeria" : "Outside Nigeria"}
+                  {lockedScope === "WITHIN_NG"
+                    ? "Within Nigeria"
+                    : "Outside Nigeria"}
                 </Chip>
                 <Chip variant="flat" color="primary" size="sm">
                   Amount: ₦{amountNGN!.toLocaleString()}
@@ -242,9 +275,9 @@ export default function NewRequestPage() {
                 </Chip>
               </div>
               <p className="text-[11px] opacity-70">
-                Clicking &quot;Pay with Paystack&quot; will redirect you to the payment
-                page. After successful payment, you&apos;ll be returned to complete
-                the destination details.
+                Click &quot;Pay with Paystack&quot; to complete the payment. After
+                a successful transaction, you&apos;ll be redirected to confirm the
+                destination institution and address.
               </p>
             </section>
           )}
@@ -270,8 +303,8 @@ export default function NewRequestPage() {
 
           {!hasStarted && (
             <p className="mt-1 text-[11px] opacity-70">
-              You can always view your previous requests and their statuses on the
-              dashboard.
+              You can always view your previous transcript requests and their
+              statuses from the dashboard.
             </p>
           )}
         </CardFooter>

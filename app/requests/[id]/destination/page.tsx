@@ -277,7 +277,7 @@ export default function DestinationPage() {
                         isDisabled={withinNigeria}
                       >
                         {COUNTRIES.map((c) => (
-                          <SelectItem key={c} value={c}>
+                          <SelectItem key={c} textValue={c}>
                             {c}
                           </SelectItem>
                         ))}
