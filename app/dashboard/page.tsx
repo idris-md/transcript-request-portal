@@ -113,7 +113,9 @@ export default function DashboardPage() {
         setRequeryError(json.error || "Unable to re-check payment.");
       } else {
         if (json.success) {
-          setRequeryMessage("Payment verified successfully and request updated.");
+          setRequeryMessage(
+            "Payment verified successfully and request updated."
+          );
         } else {
           setRequeryMessage(
             "Payment is still not confirmed as successful. You may try again later."
@@ -131,8 +133,7 @@ export default function DashboardPage() {
     }
   }
 
-  const firstName =
-    profile?.full_name?.split(" ")?.[0] || "Student";
+  const firstName = profile?.full_name?.split(" ")?.[0] || "Student";
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-6">
@@ -152,7 +153,7 @@ export default function DashboardPage() {
           </div>
           <div className="space-y-0.5">
             <h1 className="text-lg font-semibold leading-tight">
-              Your University Name
+              {process.env.PUBLIC_INSTITUTION_NAME}
             </h1>
             <p className="text-xs uppercase tracking-wide opacity-70">
               Transcript Request Portal
@@ -169,7 +170,7 @@ export default function DashboardPage() {
           >
             Logout
           </Button>
-          <Button  color="primary" size="sm">
+          <Button color="primary" size="sm">
             <Link href="/requests/new">New Transcript Request</Link>
           </Button>
         </div>
@@ -246,9 +247,7 @@ export default function DashboardPage() {
               </div>
             </div>
           ) : (
-            <p className="text-sm opacity-70">
-              No profile information found.
-            </p>
+            <p className="text-sm opacity-70">No profile information found.</p>
           )}
         </CardBody>
       </Card>
@@ -309,7 +308,7 @@ export default function DashboardPage() {
                     </TableCell>
                     <TableCell>{formatDate(item.created_at)}</TableCell>
                     <TableCell className="text-right">
-                      <Button  size="sm" variant="flat">
+                      <Button size="sm" variant="flat">
                         <Link href={`/requests/${item.id}`}>Open</Link>
                       </Button>
                     </TableCell>
@@ -378,8 +377,8 @@ export default function DashboardPage() {
                             p.status === "SUCCESS"
                               ? "success"
                               : p.status === "FAILED"
-                              ? "danger"
-                              : "warning"
+                                ? "danger"
+                                : "warning"
                           }
                         >
                           {p.status}
