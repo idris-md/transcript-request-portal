@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+//     output: 'export',      // generate static 'out' directory on build
+//   images: {
+//     unoptimized: true,   // important for static export with Next/Image
+//   },
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

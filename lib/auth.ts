@@ -1,15 +1,10 @@
-// auth.ts (in project root or src/)
+// auth.ts
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { transcriptPool } from "@/lib/db";
 
-export const {
-  auth,
-  handlers: { GET, POST },
-  signIn,
-  signOut,
-} = NextAuth({
+export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       name: "Credentials",
@@ -27,7 +22,10 @@ export const {
         const user = (rows as any[])[0];
         if (!user) return null;
 
-        const ok = await bcrypt.compare(creds.password, user.password_hash);
+        const ok = await bcrypt.compare(
+          creds.password as string,
+          user.password_hash
+        );
         if (!ok) return null;
 
         return {

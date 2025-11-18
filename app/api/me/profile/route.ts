@@ -1,7 +1,7 @@
 // app/api/me/profile/route.ts
 import { NextResponse } from "next/server";
 import { transcriptPool } from "@/lib/db";
-import { auth } from "../../auth/[...nextauth]/route";
+import { auth } from "@/lib/auth";
 
 export async function GET() {
   const session = await auth();

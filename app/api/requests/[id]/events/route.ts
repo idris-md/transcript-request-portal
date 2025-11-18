@@ -1,11 +1,11 @@
 // app/api/requests/[id]/events/route.ts
 import { NextResponse } from "next/server";
 import { transcriptPool } from "@/lib/db";
-import { auth } from "@/app/api/auth/[...nextauth]/route";
+import { auth } from "@/lib/auth";
 
 export async function GET(
   _req: Request,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
   const session = await auth();
   if (!session) {

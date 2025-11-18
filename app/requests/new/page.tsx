@@ -19,10 +19,12 @@ import {
 } from "@heroui/react";
 
 // ---------- Zod schema ----------
+z.enum(["WITHIN_NG", "OUTSIDE_NG"]);
 const newRequestSchema = z.object({
-  scope: z.enum(["WITHIN_NG", "OUTSIDE_NG"], {
-    required_error: "Please select where the transcript will be sent",
-  }),
+  scope: z.enum(
+    ["WITHIN_NG", "OUTSIDE_NG"],
+    "Please select where the transcript will be sent"
+  ),
   requestEmail: z
     .string()
     .trim()
@@ -120,7 +122,9 @@ export default function NewRequestPage() {
       const json = await res.json();
       window.location.href = json.authUrl;
     } catch (e) {
-      setServerError("Network error while initializing payment. Please try again.");
+      setServerError(
+        "Network error while initializing payment. Please try again."
+      );
     }
   }
 
@@ -128,10 +132,7 @@ export default function NewRequestPage() {
     <div className="mx-auto max-w-2xl space-y-6 px-4 py-6">
       {/* Top bar / breadcrumb */}
       <div className="flex items-center justify-between gap-2">
-        <Button
-          size="sm"
-          variant="light"
-        >
+        <Button size="sm" variant="light">
           <Link href="/dashboard">← Back to dashboard</Link>
         </Button>
         <Chip size="sm" variant="flat">
@@ -143,8 +144,8 @@ export default function NewRequestPage() {
       <div className="space-y-1 border-b border-default-200 pb-4">
         <h1 className="text-2xl font-semibold">New Transcript Request</h1>
         <p className="text-sm opacity-75">
-          Start a new transcript request by choosing where it will be sent and the
-          email address we should use for notifications.
+          Start a new transcript request by choosing where it will be sent and
+          the email address we should use for notifications.
         </p>
       </div>
 
@@ -209,7 +210,8 @@ export default function NewRequestPage() {
               )}
               {!hasStarted && (
                 <p className="text-[11px] opacity-70">
-                  You won&apos;t be able to change this after you start the request.
+                  You won&apos;t be able to change this after you start the
+                  request.
                 </p>
               )}
             </section>
@@ -229,8 +231,8 @@ export default function NewRequestPage() {
                 isDisabled={hasStarted}
               />
               <p className="text-[11px] opacity-70">
-                Receipts and status notifications for this transcript request will
-                be sent to this email address.
+                Receipts and status notifications for this transcript request
+                will be sent to this email address.
               </p>
             </section>
 
@@ -274,9 +276,9 @@ export default function NewRequestPage() {
                 </Chip>
               </div>
               <p className="text-[11px] opacity-70">
-                Click &quot;Pay with Paystack&quot; to complete the payment. After
-                a successful transaction, you&apos;ll be redirected to confirm the
-                destination institution and address.
+                Click &quot;Pay with Paystack&quot; to complete the payment.
+                After a successful transaction, you&apos;ll be redirected to
+                confirm the destination institution and address.
               </p>
             </section>
           )}
@@ -293,9 +295,7 @@ export default function NewRequestPage() {
             </Button>
           )}
 
-          {serverError && (
-            <p className="text-sm text-danger">{serverError}</p>
-          )}
+          {serverError && <p className="text-sm text-danger">{serverError}</p>}
           {serverMessage && (
             <p className="text-sm text-success">{serverMessage}</p>
           )}
