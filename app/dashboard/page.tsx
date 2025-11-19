@@ -21,6 +21,7 @@ import {
   Divider,
 } from "@heroui/react";
 import { StatusChip } from "@/components/StatusChip";
+import { siteConfig } from "@/config/site";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -144,7 +145,7 @@ export default function DashboardPage() {
           {/* University logo */}
           <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-default-100">
             <Image
-              src="/university-logo.png" // put your logo file in /public/university-logo.png
+              src="/logo.png" // put your logo file in /public/university-logo.png
               alt="University logo"
               width={48}
               height={48}
@@ -153,7 +154,7 @@ export default function DashboardPage() {
           </div>
           <div className="space-y-0.5">
             <h1 className="text-lg font-semibold leading-tight">
-              {process.env.PUBLIC_INSTITUTION_NAME}
+              {siteConfig.name}
             </h1>
             <p className="text-xs uppercase tracking-wide opacity-70">
               Transcript Request Portal

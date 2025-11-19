@@ -17,6 +17,7 @@ import {
   Link,
   Checkbox,
 } from "@heroui/react";
+import { siteConfig } from "@/config/site";
 
 // ---------- Zod schema ----------
 const loginSchema = z.object({
@@ -75,18 +76,18 @@ export default function LoginPage() {
         <CardHeader className="flex flex-col gap-3 pt-5 pb-3">
           {/* Logo + title */}
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-default-100">
+            <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-default-100">
               <Image
-                src="/university-logo.png" // ensure this exists in /public
+                src="/logo.png" // ensure this exists in /public
                 alt="University logo"
-                width={40}
-                height={40}
-                className="h-10 w-10 object-contain"
+                width={80}
+                height={80}
+                className="h-80 w-80 object-contain"
               />
             </div>
             <div className="space-y-0.5">
               <h1 className="text-base font-semibold leading-tight">
-                Your University Name
+              {siteConfig.name}
               </h1>
               <p className="text-[11px] uppercase tracking-wide opacity-70">
                 Transcript Request Portal

@@ -15,6 +15,7 @@ import {
   Divider,
   Chip,
 } from "@heroui/react";
+import { siteConfig } from "@/config/site";
 
 // ---------- Zod Schemas ----------
 
@@ -181,9 +182,9 @@ export default function RegisterPage() {
         {/* Top header with logo */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-default-100">
+            <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-default-100">
               <Image
-                src="/university-logo.png" // make sure this exists in /public
+                src="/logo.png" // make sure this exists in /public
                 alt="University logo"
                 width={40}
                 height={40}
@@ -192,7 +193,7 @@ export default function RegisterPage() {
             </div>
             <div className="space-y-0.5">
               <h1 className="text-base font-semibold leading-tight">
-                Your University Name
+              {siteConfig.name}
               </h1>
               <p className="text-[11px] uppercase tracking-wide opacity-70">
                 Transcript Request Portal · Registration
@@ -428,7 +429,7 @@ export default function RegisterPage() {
                     <p className="text-sm text-success">
                       {serverMessage}{" "}
                       <a
-                        href="/login"
+                        href="/"
                         className="font-medium text-primary underline-offset-2 hover:underline"
                       >
                         Go to login
